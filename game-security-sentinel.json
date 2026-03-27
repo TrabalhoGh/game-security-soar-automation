@@ -1,0 +1,195 @@
+{
+  "schema_version": 28,
+  "standard_lib_version": 89,
+  "action_runtime_version": 72,
+  "name": "Game Security Sentinel",
+  "description": null,
+  "guid": "090bda24c18dce682220e408e08351f6",
+  "slug": "game_security_sentinel",
+  "agents": [
+    {
+      "type": "Agents::WebhookAgent",
+      "name": "Receive_Report",
+      "disabled": false,
+      "description": null,
+      "guid": "e9b62add40129c1ee6488fc798f1fb18",
+      "origin_story_identifier": "cloud:a200c43f6c772713d4f28cbc84da9b90:090bda24c18dce682220e408e08351f6",
+      "options": {
+        "path": "06c99c334ccd11df3a156d69aa88b268",
+        "secret": "b9dea65fa87d2909bd6f82b64c776890",
+        "verbs": "get,post"
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": false,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null
+    },
+    {
+      "type": "Agents::HTTPRequestAgent",
+      "name": "HTTP Request Action",
+      "disabled": false,
+      "description": null,
+      "guid": "9fd4e88533eac438388f5988bab6e463",
+      "origin_story_identifier": "cloud:a200c43f6c772713d4f28cbc84da9b90:090bda24c18dce682220e408e08351f6",
+      "options": {
+        "url": "https://www.virustotal.com/api/v3/domains/{{<<receive_report.body.url_do_site>>",
+        "content_type": "application_json",
+        "method": "get",
+        "payload": {
+          "key": "value",
+          "array_example": [
+            "foo",
+            "bar"
+          ],
+          "object_example": {
+            "key": "value"
+          }
+        },
+        "headers": {
+          "x-apikey": "d9e69d5edc55321563343c575c81d44f41b232a5bc54b3a45f971f2d0693f8a9"
+        }
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": false,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::TriggerAgent",
+      "name": "Trigger Action",
+      "disabled": false,
+      "description": null,
+      "guid": "c713a41002adb8588f816390d75b2a3d",
+      "origin_story_identifier": "cloud:a200c43f6c772713d4f28cbc84da9b90:090bda24c18dce682220e408e08351f6",
+      "options": {
+        "rules": [
+          {
+            "path": "=http_request_action.body.data.attributes.last_analysis_stats.malicious",
+            "type": "field>value",
+            "value": "0"
+          }
+        ]
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": false,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null
+    },
+    {
+      "type": "Agents::EmailAgent",
+      "name": "Send Email Action",
+      "disabled": false,
+      "description": null,
+      "guid": "c8f25eaea9229f2445221edf9d1557dc",
+      "origin_story_identifier": "cloud:a200c43f6c772713d4f28cbc84da9b90:090bda24c18dce682220e408e08351f6",
+      "options": {
+        "recipients": [],
+        "reply_to": "",
+        "sender_name": "Gabriel Da Silva",
+        "subject": "<<⚠️ ALERTA: Cheat Malicioso Detectado - {{Receber_Denuncia.body.nome_do_cheat}}>>",
+        "body": "INQUIRY REPORT - GAME SECURITY LAB\r\n----------------------------------\r\nA suspicious game tool was analyzed.\r\n\r\nCheat Name: {{Receber_Denuncia.body.nome_do_cheat}}\r\nURL Analyzed: {{Receber_Denuncia.body.url_do_site}}\r\n\r\nVERDICT: MALICIOUS\r\nDetection Count: {{http_request_action.body.data.attributes.last_analysis_stats.malicious}} engines.\r\n\r\nThis tool is potentially a \"Fake Cheat\" designed to steal game credentials or session cookies.\r\n----------------------------------\r\nAutomated by: Tines SOAR",
+        "advanced_html": true,
+        "cc": [],
+        "bcc": [],
+        "sender_address": ""
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": false,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    }
+  ],
+  "diagram_notes": [],
+  "links": [
+    {
+      "source": 0,
+      "receiver": 1
+    },
+    {
+      "source": 1,
+      "receiver": 2
+    },
+    {
+      "source": 2,
+      "receiver": 3
+    }
+  ],
+  "diagram_layout": "{\"9fd4e88533eac438388f5988bab6e463\":[180,0],\"c713a41002adb8588f816390d75b2a3d\":[180,75],\"c8f25eaea9229f2445221edf9d1557dc\":[180,165],\"e9b62add40129c1ee6488fc798f1fb18\":[180,-90]}",
+  "story_library_metadata": {},
+  "monitor_failures": false,
+  "synchronous_webhooks_enabled": false,
+  "integrations": [],
+  "sections": [],
+  "parent_only_send_to_story": false,
+  "send_to_story_timeout_enabled": false,
+  "send_to_story_timeout_duration_seconds": null,
+  "keep_events_for": 86400,
+  "reporting_status": true,
+  "send_to_story_enabled": false,
+  "entry_agent_guid": null,
+  "exit_agent_guids": [],
+  "api_entry_action_guids": [],
+  "api_exit_action_guids": [],
+  "send_to_story_access": null,
+  "send_to_story_access_source": 0,
+  "send_to_story_skill_use_requires_confirmation": true,
+  "pages": [],
+  "tags": [],
+  "time_saved_unit": "minutes",
+  "time_saved_value": 0,
+  "origin_story_identifier": "cloud:a200c43f6c772713d4f28cbc84da9b90:090bda24c18dce682220e408e08351f6",
+  "recipients": [],
+  "integration_product": null,
+  "integration_vendor": null,
+  "llm_product_instructions": "",
+  "start_reference": null,
+  "send_to_stories": [],
+  "exported_at": "2026-03-27T23:34:56Z",
+  "icon": ":date:"
+}
